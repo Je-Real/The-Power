@@ -3,6 +3,8 @@
 
 const byte ROWS = 5;
 const byte COLS = 8;
+// Funciona al revez 
+// TODO: Corregir notas al revez
 char keys[ROWS][COLS] = {
   {36,37,38,39,40,41,42,43},
   {44,45,46,47,48,49,50,51},
@@ -16,9 +18,6 @@ byte colPins[COLS] = {2,3,4,5,6,7,8,9}; //connect to the column pinouts of the k
 Keypad kpd = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 void setup() {
-  MIDI.begin(MIDI_CHANNEL_OFF);
-  Serial.begin(9600);
-  pinMode(MIDI_LED, OUTPUT);
 }
 
 
@@ -33,16 +32,17 @@ void loop() {
             {
                 switch (kpd.key[i].kstate) {
                     case PRESSED:
-                    digitalWrite(MIDI_LED, HIGH);
+                    //digitalWrite(MIDI_LED, HIGH);
                     //Serial.print(kpd.key[i].kchar,DEC);
+                    //MIDI.sendNoteOn(kpd.key[i].kchar, 127, MIDI_CHANNEL);
                     //Serial.println(" Pressed");
-                    MIDI.sendNoteOn(kpd.key[i].kchar, 127, MIDI_CHANNEL);
+
+                    noteOn(0, kpd.key[i].kchar, 64);
                 break;
                     case HOLD:
                 break;
                     case RELEASED:
-                    MIDI.sendNoteOff(kpd.key[i].kchar, 0, MIDI_CHANNEL);
-                    digitalWrite(MIDI_LED, LOW);
+                    noteOff(0, kpd.key[i].kchar, 64);
                 break;
                     case IDLE:
                 break;
